@@ -173,6 +173,16 @@ func (nd *Decoder) decodeRecord(version uint16, obsDomainID uint32, samplingRate
 		case netflow.IPFIX_FIELD_egressInterface:
 			bf.OutIf = uint32(decodeUNumber(v))
 
+		// Physical Interfaces fallback
+		case netflow.IPFIX_FIELD_ingressPhysicalInterface:
+			if bf.InIf == 0 {
+				bf.InIf = uint32(decodeUNumber(v))
+			}
+		case netflow.IPFIX_FIELD_egressPhysicalInterface:
+			if bf.OutIf == 0 {
+				bf.OutIf = uint32(decodeUNumber(v))
+			}
+
 		// RFC7133: process it later to not override other fields
 		case netflow.IPFIX_FIELD_dataLinkFrameSize:
 			// We are going to ignore it as we don't know L3 size yet.
